@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:actualweather/remote.dart';
 
@@ -5,16 +6,37 @@ void main() {
   runApp(MyApp());
 }
 
-class Idojaras {
-  final num tempCel;
-  final String name ;
+class Location {
+  final String name;
 
-  Idojaras({this.tempCel, this.name});
+  Location({this.name});
+
+  factory Location.fromJson(Map<String, dynamic> json) {
+    return Location(name: json['name']);
+  }
+}
+
+class CurrentWeather {
+  final num tempCel;
+
+  CurrentWeather({this.tempCel});
+
+  factory CurrentWeather.fromJson(Map<String, dynamic> json) {
+    return CurrentWeather(tempCel: json['temp_c']);
+
+  }
+}
+
+class Idojaras {
+  final Location location;
+  final CurrentWeather currentWeather;
+
+  Idojaras({this.location, this.currentWeather});
 
   factory Idojaras.fromJson(Map<String, dynamic> json) {
     return Idojaras(
-      tempCel: json['temp_c'],
-      name: json['name'],
+      location: Location.fromJson(json['location']),
+      currentWeather: CurrentWeather.fromJson(json['current']),
     );
   }
 }
@@ -23,6 +45,7 @@ class MyApp extends StatefulWidget {
   // This widget is the root of your application.
   @override
   _MyAppState createState() => _MyAppState();
+
 }
 
 class _MyAppState extends State<MyApp> {
@@ -41,7 +64,7 @@ class _MyAppState extends State<MyApp> {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.green,
+        primarySwatch: Colors.lightBlue,
         // This makes the visual density adapt to the platform that you run
         // the app on. For desktop platforms, the controls will be smaller and
         // closer together (more dense) than on mobile platforms.
@@ -95,21 +118,48 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        child: FutureBuilder<Idojaras>(
-          future: futureIdojaras,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Text("Hőmérséklet:  ${snapshot.data.tempCel} Város: ${snapshot.data.name}");
-            } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
-            }
+      drawer: Drawer(
+        child: (   new FloatingActionButton(
+          onPressed: (){},
+          child: new Text(
+            "Budapest",
+          ),
+        )
+        )// This trailing comma makes auto-f
+      ),
+      body:
 
-            // By default, show a loading spinner.
-            return CircularProgressIndicator();
-          },
+      Center(
+        child:
+        Padding(
+          padding: const EdgeInsets.all(9.0),
+          child: Column(
+            children: [
+              Row(
+
+                children: [
+                  FutureBuilder(
+
+                    future: futureIdojaras,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Text("Hőmérséklet:  ${snapshot.data.currentWeather.tempCel} \nVáros: ${snapshot.data.location.name}\nUtolsó frissítés: ", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),) ;
+
+                      } else if (snapshot.hasError) {
+                        return Text("${snapshot.error}");
+                      }
+
+                      // By default, show a loading spinner.
+                      return CircularProgressIndicator();
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
+     // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

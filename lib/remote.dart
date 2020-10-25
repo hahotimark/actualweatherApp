@@ -3,15 +3,14 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 
-const idojaras = r"http://api.weatherapi.com/v1/current.json?key=41f00bb660f84ca494b190113201810&q=Budapest";
+// const idojaras = r"http://api.weatherapi.com/v1/current.json?key=41f00bb660f84ca494b190113201810&q=Budapest";
 
 Future<http.Response> fetchIdojaras2() {
-  return http.get('http://api.weatherapi.com/v1/current.json?key=41f00bb660f84ca494b190113201810&q=Budapest');
+  return http.get('http://api.weatherapi.com/v1/current.json?key=41f00bb660f84ca494b190113201810&q=London');
 }
 
 Future<Idojaras> fetchIdojaras() async {
-  final response =
-  await http.get('http://api.weatherapi.com/v1/current.json?key=41f00bb660f84ca494b190113201810&q=Budapest');
+  final response = await http.get('http://api.weatherapi.com/v1/current.json?key=41f00bb660f84ca494b190113201810&q=Budapest');
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
