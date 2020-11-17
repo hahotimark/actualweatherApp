@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:actualweather/remote.dart';
 
@@ -18,11 +19,13 @@ class Location {
 
 class CurrentWeather {
   final num tempCel;
+  final num wind;
 
-  CurrentWeather({this.tempCel});
+  CurrentWeather({this.tempCel, this.wind});
 
   factory CurrentWeather.fromJson(Map<String, dynamic> json) {
-    return CurrentWeather(tempCel: json['temp_c']);
+    return CurrentWeather(tempCel: json['temp_c'],
+                          wind: json['wind_kph']);
 
   }
 }
@@ -30,6 +33,7 @@ class CurrentWeather {
 class Idojaras {
   final Location location;
   final CurrentWeather currentWeather;
+
 
   Idojaras({this.location, this.currentWeather});
 
@@ -53,6 +57,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -113,53 +118,217 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
+      //resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(widget.title, style: TextStyle(color: Colors.blueGrey)),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.wb_cloudy,
+              color: Colors.blueGrey,
+            ),
+            onPressed: () {
+              // do something
+            },
+          )
+        ],
       ),
-      drawer: Drawer(
-        child: (   new FloatingActionButton(
-          onPressed: (){},
-          child: new Text(
-            "Budapest",
-          ),
-        )
-        )// This trailing comma makes auto-f
-      ),
+
       body:
 
-      Center(
-        child:
-        Padding(
-          padding: const EdgeInsets.all(9.0),
-          child: Column(
-            children: [
-              Row(
+      Column(
+        children: [
+          Header(),
+                  Column(
+                    children: [
+                      SizedBox(   //Use of SizedBox
+                        height: 10,
+                      ),
+                      Container(
+                    padding: EdgeInsets.all(4.0),
+                    height: 170,
+                    width: 394,
+                    decoration: BoxDecoration(
+                      color: Colors.indigoAccent.withOpacity(0.8),
 
-                children: [
-                  FutureBuilder(
-
-                    future: futureIdojaras,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return Text("Hőmérséklet:  ${snapshot.data.currentWeather.tempCel} \nVáros: ${snapshot.data.location.name}\nUtolsó frissítés: ", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),) ;
-
-                      } else if (snapshot.hasError) {
-                        return Text("${snapshot.error}");
-                      }
-
-                      // By default, show a loading spinner.
-                      return CircularProgressIndicator();
-                    },
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(8),
+                          topRight: Radius.circular(8),
+                          bottomLeft: Radius.circular(8),
+                          bottomRight: Radius.circular(8)
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.6),
+                          spreadRadius: 6,
+                          blurRadius: 7,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Column(
+                          children: [
+                            Text("Kaposvár időjárása", style: TextStyle(fontFamily: 'Raleway',fontSize: 19, fontWeight: FontWeight.bold, color: Colors.white),),
+                            Row(
+                              children: [
+                                Text("\nHőmérséklet: 23 C", style: TextStyle(fontFamily: 'Raleway',fontSize: 17, fontWeight: FontWeight.bold),),
+                              ],
+                            ),
+                            Icon(Icons.cloud_queue,
+                              color: Colors.white,
+                              size: 30.0,),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ],
-          ),
-        ),
+                      SizedBox(   //Use of SizedBox
+                        height: 16,
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(4.0),
+                        height: 170,
+                        width: 394,
+                        decoration: BoxDecoration(
+                          color: Colors.indigoAccent.withOpacity(0.5),
+
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(8),
+                              topRight: Radius.circular(8),
+                              bottomLeft: Radius.circular(8),
+                              bottomRight: Radius.circular(8)
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 6,
+                              blurRadius: 7,
+                              offset: Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                                Text("Kaposvár 24 előrejelzés", style: TextStyle(fontFamily: 'Raleway',fontSize: 19, fontWeight: FontWeight.bold, color: Colors.white),),
+                                Row(
+                                  children: [
+                                    Text("\nHőmérséklet: 23 C", style: TextStyle(fontFamily: 'Raleway',fontSize: 17, fontWeight: FontWeight.bold),),
+                                  ],
+                                ),
+                                Icon(Icons.cloud_queue,
+                                  color: Colors.white,
+                                  size: 30.0,),
+                          ],
+                        ),
+                      ),
+                      SizedBox(   //Use of SizedBox
+                        height: 16,
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(4.0),
+                        height: 170,
+                        width: 394,
+                        decoration: BoxDecoration(
+                          color: Colors.indigoAccent.withOpacity(0.2),
+
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(8),
+                              topRight: Radius.circular(8),
+                              bottomLeft: Radius.circular(8),
+                              bottomRight: Radius.circular(8)
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 6,
+                              blurRadius: 7,
+                              offset: Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+
+                                Text("Kaposvár 72 órás előrejelzés", style: TextStyle(fontFamily: 'Raleway',fontSize: 19, fontWeight: FontWeight.bold, color: Colors.white),),
+                                Row(
+                                  children: [
+                                    Text("\nHőmérséklet: 23 C ", style: TextStyle(fontFamily: 'Raleway',fontSize: 17, fontWeight: FontWeight.bold),),
+                                  ],
+                                ),
+                                Icon(Icons.cloud_queue,
+                                  color: Colors.white,
+                                  size: 30.0,),
+                          ],
+                        ),
+                      )
+
+
+
+                        ]
+                      ),
+                  ]
       ),
-     // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
 }
+class Header extends StatefulWidget{
+
+  @override
+  _HeaderState createState() => _HeaderState();
+}
+
+class _HeaderState extends State<Header>{
+  List<String>cities = ["Budapest", "Kaposvár", "Miskolc", "London", "Csepel", "Szentlászló", "Dómbóvár", "Pécs"];
+  int selectedIndex = 0;
+  @override
+  Widget build(BuildContext context){
+    return Container(
+      height: 25,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: cities.length,
+        itemBuilder:(context, index) => buildCities(index),
+      ),
+    );
+  }
+
+  Widget buildCities(int index) {
+    return GestureDetector(
+      onTap: (){
+        setState(() {
+          selectedIndex = index;
+        });
+      },
+      child: Padding(
+        padding: EdgeInsets.all(3.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+        cities[index],
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: selectedIndex == index ? Colors.black45 : Colors.black45,
+          ),
+      ),
+              Container(
+                margin: EdgeInsets.all(0.5),
+                height: 2,
+                width: 25,
+                color: selectedIndex == index ? Colors.black45 : Colors.transparent,
+              )
+            ]
+      )
+      ),
+    );
+  }
+
+}
+
